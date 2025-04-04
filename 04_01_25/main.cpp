@@ -29,29 +29,32 @@ int main()
     long copyNum = binNumber;
     linkedStack<int> binary;
     arrayStack<int> binReverse;
-    while (copyNum > 0)
-    {
-        int digit = copyNum % 10;
-        if (digit != 0 && digit != 1)
-        {
+
+    //covert getBinary to strings.
+    std::string binaryStr = std::to_string(getBinaryNumber());  //get our input in string form
+    std::stack<int> binaryStack;                                //make our stack
+
+    for (char c : binaryStr) {                                  //get only 0 or 1 to the stack
+        if (c != '0' && c != '1') {
             std::cout << "Binary Numbers only have 1s and 0s." << std::endl;
-            break;
+            return 1; // Indicate an error
         }
-        binary.push(digit);
-        copyNum = copyNum / 10;
+        binaryStack.push(c - '0');                             //convert chars 0/1 to ints
     }
-    while (!binary.isEmptyStack())
-    {
-        binReverse.push(binary.pop());
-    }
-    int position = 0;
+
+    
+    //now we start to convert to decimal
     int decimal = 0;
-    while (!binReverse.isEmptyStack())
-    {
-        decimal += binReverse.pop() * pow(2, position);
-        position++;
+    int position = 0;
+
+    //do the conversion of binary to decimal
+    while (!binaryStack.empty()) {                            //while not empty
+        decimal += binaryStack.top() * pow(2, position);      //decimal += top stack element at pos n^2
+        binaryStack.pop();                                    //after it's added to decimal we pop it off
+        position++;                                           //increment postion.
     }
-    std::cout << binNumber << " is " << decimal << " in decimal." << std::endl;
+
+    std::cout << binaryStr << " is " << decimal << " in decimal." << std::endl;
 
     return 0;
 }
