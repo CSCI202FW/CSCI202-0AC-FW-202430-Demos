@@ -13,6 +13,7 @@ bool intLTEQ(int num, int upper = 0, int = 0);
 int inputInt(std::string &prompt, std::string &err, bool (*valid)(int, int, int), int lower = 0, int upper = 0);
 int factorial(int n);
 long fibNum(long f[], long n);
+void moveDisks(int, char source, char destination, char spare);
 
 // lecture activity. take iterative fibonacci number code from page 296 of the book
 //  implement as a function
@@ -42,6 +43,8 @@ int main()
     fibseq[0] = fibNum1;
     fibseq[1] = fibNum2;
     std::cout << "The " << nthFibonacci << " th Fibonacci number is " << fibNum(fibseq, nthFibonacci) << std::endl;
+
+    moveDisks(5, 'A', 'C', 'B');
 
     return 0;
 }
@@ -130,4 +133,14 @@ long fibNum(long f[], long n)
     }
     f[n - 1] = fibNum(f, n - 1) + fibNum(f, n - 2);
     return f[n - 1];
+}
+
+void moveDisks(int count, char source, char destination, char spare)
+{
+    if (count > 0)
+    {
+        moveDisks(count - 1, source, spare, destination);
+        std::cout << "Move disk " << count << " from " << source << " to " << destination << std::endl;
+        moveDisks(count - 1, spare, destination, source);
+    }
 }
