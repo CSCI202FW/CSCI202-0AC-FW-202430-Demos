@@ -12,6 +12,12 @@ bool intGTEQ(int num, int lower = 0, int = 0);
 bool intLTEQ(int num, int upper = 0, int = 0);
 int inputInt(std::string &prompt, std::string &err, bool (*valid)(int, int, int), int lower = 0, int upper = 0);
 int factorial(int n);
+long fibNum(long f[], long n);
+
+// lecture activity. take iterative fibonacci number code from page 296 of the book
+//  implement as a function
+//  compare to the recursive version
+//  which would you choose.
 
 int main()
 {
@@ -19,6 +25,23 @@ int main()
     std::string err = "You did not enter a number between 1 and 50.";
     int num = inputInt(prompt, err, intInRange, 1, 50);
     std::cout << "Factorial of " << num << " is " << factorial(num) << std::endl;
+    prompt = "Enter the first Fibonacci Number: ";
+    err = "The number entered must be greater than 0.";
+    long fibNum1 = inputInt(prompt, err, intGTEQ);
+    prompt = "Enter the second Fibonacci Number: ";
+    err = "The number entered must be greater than or equal to " + std::to_string(fibNum1);
+    long fibNum2 = inputInt(prompt, err, intGTEQ, fibNum1);
+    prompt = "Enter the position of the desired Fibonacci number: ";
+    err = "The number entered must be greater than 0: ";
+    long nthFibonacci = inputInt(prompt, err, intGT);
+    long *fibseq = new long[nthFibonacci];
+    for (int i = 0; i < nthFibonacci; i++)
+    {
+        fibseq[i] = -1;
+    }
+    fibseq[0] = fibNum1;
+    fibseq[1] = fibNum2;
+    std::cout << "The " << nthFibonacci << " th Fibonacci number is " << fibNum(fibseq, nthFibonacci) << std::endl;
 
     return 0;
 }
@@ -93,4 +116,18 @@ int factorial(int n)
         return 1;
     }
     return n * factorial(n - 1);
+}
+
+long fibNum(long f[], long n)
+{
+    if (n < 0)
+    {
+        return 0;
+    }
+    if (f[n - 1] != -1)
+    {
+        return f[n - 1];
+    }
+    f[n - 1] = fibNum(f, n - 1) + fibNum(f, n - 2);
+    return f[n - 1];
 }
