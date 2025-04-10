@@ -19,9 +19,58 @@ void moveDisks(int, char source, char destination, char spare);
 //  implement as a function
 //  compare to the recursive version
 //  which would you choose.
+void fibFunction();
+void fibRecursion();
+
 
 int main()
 {
+    //I moved the original main to a fn so I can easily switch back and forth
+    fibFunction();
+    //fibRecursion();
+
+    return 0;
+}
+
+//lab assignment function
+void fibFunction(){
+    //declarations
+    int previous1;
+    int previous2;
+    int current;
+    int counter;
+    int nthFibonacci;
+
+    std::cout << "Enter the first two Fibonacci " << "numbers: ";
+    std::cin >> previous1 >> previous2;
+    std::cout << endl;
+
+    std::cout << "The first two Fibonacci numbers are " << previous1 
+        << " and  " << previous2 << endl;
+    
+    std::cout << "Enter the position of the desired " << "Fibonacci number: ";
+    std::cin >> nthFibonacci;
+    std::cout << endl;
+
+    if (nthFibonacci == 1)
+        current = previous1;
+    else if (nthFibonacci == 2)
+        current = previous2;
+    else {
+        counter = 3;
+        while (counter <= nthFibonacci){
+            current = previous2 + previous1;
+            previous1 = previous2;
+            previous2 = current;
+            counter++;
+            }
+        }
+    std::cout << "the Fibonacci number at position "
+        << nthFibonacci << " is " << current << "\n";
+}
+
+//lab demo main
+void fibRecursion(){
     std::string prompt = "Enter a number between 1 and 50: ";
     std::string err = "You did not enter a number between 1 and 50.";
     int num = inputInt(prompt, err, intInRange, 1, 50);
@@ -45,8 +94,6 @@ int main()
     std::cout << "The " << nthFibonacci << " th Fibonacci number is " << fibNum(fibseq, nthFibonacci) << std::endl;
 
     moveDisks(5, 'A', 'C', 'B');
-
-    return 0;
 }
 
 void resetStream()
