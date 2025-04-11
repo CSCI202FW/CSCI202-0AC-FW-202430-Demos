@@ -44,7 +44,7 @@ linkedListIterator<t> linkedListIterator<t>::operator++()
 {
     if (current != nullptr)
     {
-        current = current->link;
+        current = current->next;
     }
     return *this;
 }
@@ -68,7 +68,7 @@ linkedListIterator<t> linkedListIterator<t>::operator+(int x)
     node<t> *temp = current;
     for (int i = 0; i < x && temp != nullptr; i++)
     {
-        temp = temp->link;
+        temp = temp->next;
     }
     return linkedListIterator<t>(temp);
 }

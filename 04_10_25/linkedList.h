@@ -85,17 +85,17 @@ void linkedListType<t>::copyList(const linkedListType<t> &fromList)
         this->head = new node<t>;
         // don't do this shallow copy this->head->data = fromList.head.data;
         this->head->data = new t(*(current->data));
-        this->head->link = nullptr;
+        this->head->next = nullptr;
         this->tail = this->head;
-        current = current->link;
+        current = current->next;
         while (current != nullptr)
         {
             newNode = new node<t>;
             newNode->data = new t(*(current->data));
-            newNode->link = nullptr;
-            tail->link = newNode;
-            tail = tail->link;
-            current = current->link;
+            newNode->next = nullptr;
+            tail->next = newNode;
+            tail = tail->next;
+            current = current->next;
         }
     }
 }
@@ -115,7 +115,7 @@ void linkedListType<t>::destroyList()
         while (head != nullptr)
         {
             temp = head;
-            head = head->link;
+            head = head->next;
             delete temp;
         }
         tail = nullptr;
@@ -165,7 +165,7 @@ std::ostream &operator<<(std::ostream &out, const linkedListType<t> &list)
         while (current != nullptr)
         {
             out << *(current->data) << std::endl;
-            current = current->link;
+            current = current->next;
         }
     }
     return out;
@@ -193,7 +193,7 @@ void linkedListType<t>::print(std::ostream &out, std::string sep) const
         while (current != nullptr)
         {
             out << *(current->data) << sep;
-            current = current->link;
+            current = current->next;
         }
     }
 }
