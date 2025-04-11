@@ -70,7 +70,12 @@
         "variant": "cpp",
         "bitset": "cpp",
         "regex": "cpp",
-        "fstream": "cpp"
+        "fstream": "cpp",
+        "chrono": "cpp",
+        "ratio": "cpp",
+        "semaphore": "cpp",
+        "stop_token": "cpp",
+        "thread": "cpp"
     },
     "cmake.sourceDirectory": "/home/avenable11/CSCI202-0AC-FW-202430-Demos/03_20_25/unit test"
 }

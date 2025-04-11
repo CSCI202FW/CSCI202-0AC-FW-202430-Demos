@@ -197,4 +197,39 @@ void mergeSort(t array[], int begin, int end)
     mergeSort(array, mid + 1, end);
     merge(array, begin, mid, end);
 }
+
+template <class t>
+int partition(t list[], int low, int high, int (*comp)(t &, t &))
+{
+    t pivot = list[high];
+    int i = low - 1;
+    for (int j = low; j <= high - 1; j++)
+    {
+        t item = list[j];
+        if (comp(item, pivot) < 0)
+        {
+            i++;
+            t temp = list[j];
+            list[j] = list[i];
+            list[i] = temp;
+        }
+    }
+    i++;
+    t temp = list[i];
+    list[i] = list[high];
+    list[high] = temp;
+    return i;
+}
+
+template <class t>
+void quickSort(t list[], int low, int high, int (*comp)(t &, t &))
+{
+    if (low < high)
+    {
+        int pi = partition(list, low, high, comp);
+        quickSort(list, low, pi - 1, comp);
+        quickSort(list, pi + 1, high, comp);
+    }
+}
+
 #endif
