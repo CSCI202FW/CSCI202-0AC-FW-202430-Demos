@@ -191,7 +191,7 @@ int binaryTree<t>::treeheight() const
 template <class t>
 int binaryTree<t>::height(binaryNode<t> *currentNode) const
 {
-    if (p != nullptr)
+    if (currentNode != nullptr)
     {
         return max(height(currentNode->left), height(currentNode->right)) + 1;
     }
