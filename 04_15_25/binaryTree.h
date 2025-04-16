@@ -242,4 +242,10 @@ int binaryTree<t>::leavesCount(binaryNode<t> *currentNode) const
     return leavesCount(currentNode->left) + leavesCount(currentNode->right);
 }
 
+template <class t>
+binaryNode<t> *&binaryTree<t>::getRoot()
+{
+    return this->root;
+}
+
 #endif
