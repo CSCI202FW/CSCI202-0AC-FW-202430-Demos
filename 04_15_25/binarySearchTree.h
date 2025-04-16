@@ -4,7 +4,7 @@
 #include <stdexcept>
 
 template <class t>
-class binarySearchTree : public binaryTree<t>
+class binarySearchTree : public binaryTreeType<t>
 {
 public:
     void insert(const t &insertItem);
@@ -14,9 +14,9 @@ public:
 
 private:
     int (*compare)(const t &item1, const t &item2);
-    void deleteFromTree(binaryNode<t> *&currentNode);
-    bool search(const t &searchItem, binaryNode<t> *currentNode);
-    void insert(binaryNode<t> *&insertItem, binaryNode<t> *&currentNode);
+    void deleteFromTree(nodeType<t> *&currentNode);
+    bool search(const t &searchItem, nodeType<t> *currentNode);
+    void insert(nodeType<t> *&insertItem, nodeType<t> *&currentNode);
 };
 
 template <class t>
@@ -28,14 +28,14 @@ binarySearchTree<t>::binarySearchTree(int (*comp)(const t &item1, const t &item2
 template <class t>
 void binarySearchTree<t>::insert(const t &insertItem)
 {
-    binaryNode<t> *newNode = new binaryNode<t>;
+    nodeType<t> *newNode = new nodeType<t>;
     newNode->data = new t(insertItem);
-    newNode->left = nullptr;
-    newNode->right = nullptr;
+    newNode->lLink = nullptr;
+    newNode->rLink = nullptr;
     insert(newNode, this->getRoot());
 }
 template <class t>
-void binarySearchTree<t>::insert(binaryNode<t> *&insertItem, binaryNode<t> *&currentNode)
+void binarySearchTree<t>::insert(nodeType<t> *&insertItem, nodeType<t> *&currentNode)
 {
     if (currentNode == nullptr)
     {
@@ -50,11 +50,11 @@ void binarySearchTree<t>::insert(binaryNode<t> *&insertItem, binaryNode<t> *&cur
         }
         else if (cmp == 1) // new node is larger than current --> head right
         {
-            insert(insertItem, currentNode->right);
+            insert(insertItem, currentNode->rLink);
         }
         else if (cmp == -1) // new node is smaller than current --> head left
         {
-            insert(insertItem, currentNode->left);
+            insert(insertItem, currentNode->lLink);
         }
     }
 }
@@ -66,7 +66,7 @@ bool binarySearchTree<t>::search(const t &searchItem)
 }
 
 template <class t>
-bool binarySearchTree<t>::search(const t &searchItem, binaryNode<t> *currentNode)
+bool binarySearchTree<t>::search(const t &searchItem, nodeType<t> *currentNode)
 {
     if (currentNode == nullptr)
     {
@@ -79,19 +79,19 @@ bool binarySearchTree<t>::search(const t &searchItem, binaryNode<t> *currentNode
     }
     if (cmp == 1)
     {
-        return search(searchItem, currentNode->right);
+        return search(searchItem, currentNode->rLink);
     }
     else if (cmp == -1)
     {
-        return search(searchItem, currentNode->left);
+        return search(searchItem, currentNode->lLink);
     }
     return false;
 }
 template <class t>
 void binarySearchTree<t>::deleteNode(const t &deleteItem)
 {
-    binaryNode<t> *current;
-    binaryNode<t> *currentParent;
+    nodeType<t> *current;
+    nodeType<t> *currentParent;
     bool found = false;
     if (this->isEmpty())
     {
@@ -112,11 +112,11 @@ void binarySearchTree<t>::deleteNode(const t &deleteItem)
             currentParent = current;
             if (cmp == 1)
             {
-                current = current->right;
+                current = current->rLink;
             }
             else
             {
-                current = current->left;
+                current = current->lLink;
             }
         }
     }
@@ -132,51 +132,51 @@ void binarySearchTree<t>::deleteNode(const t &deleteItem)
         }
         else if (compare(deleteItem, *(*currentParent)) == -1)
         {
-            deleteFromTree(currentParent->left);
+            deleteFromTree(currentParent->lLink);
         }
         else
         {
-            deleteFromTree(currentParent->right);
+            deleteFromTree(currentParent->rLink);
         }
     }
 }
 
 template <class t>
-void binarySearchTree<t>::deleteFromTree(binaryNode<t> *&currentNode)
+void binarySearchTree<t>::deleteFromTree(nodeType<t> *&currentNode)
 {
-    binaryNode<t> *replace;
-    binaryNode<t> *replaceParent;
-    binaryNode<t> *temp;
+    nodeType<t> *replace;
+    nodeType<t> *replaceParent;
+    nodeType<t> *temp;
     if (currentNode == nullptr)
     {
         throw std::invalid_argument("The item to be deleted is not in the tree.");
     }
-    if (currentNode->left == nullptr && currentNode->right == nullptr)
+    if (currentNode->lLink == nullptr && currentNode->rLink == nullptr)
     {
         temp = currentNode;
         currentNode = nullptr;
         delete temp;
     }
-    else if (currentNode->left == nullptr)
+    else if (currentNode->lLink == nullptr)
     {
         temp = currentNode;
-        currentNode = temp->right;
+        currentNode = temp->rLink;
         delete temp;
     }
-    else if (currentNode->right == nullptr)
+    else if (currentNode->rLink == nullptr)
     {
         temp = currentNode;
-        currentNode = temp->left;
+        currentNode = temp->lLink;
         delete temp;
     }
     else
     {
-        replace = currentNode->left;
+        replace = currentNode->lLink;
         replaceParent = nullptr;
-        while (replace->right != nullptr)
+        while (replace->rLink != nullptr)
         {
             replaceParent = replace;
-            replace = replace->right;
+            replace = replace->rLink;
         }
         t *tempData;
         tempData = currentNode->data;
@@ -184,11 +184,11 @@ void binarySearchTree<t>::deleteFromTree(binaryNode<t> *&currentNode)
         replace->data = tempData;
         if (replaceParent == nullptr)
         {
-            currentNode->left = replace->left;
+            currentNode->lLink = replace->lLink;
         }
         else
         {
-            replaceParent->right = replace->left;
+            replaceParent->rLink = replace->lLink;
         }
         delete replace;
         replace = nullptr;
