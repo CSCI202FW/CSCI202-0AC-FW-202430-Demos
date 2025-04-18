@@ -9,7 +9,7 @@ class AVLTree : public binarySearchTree<t>
 public:
     void insert(const t &insertItem);
     AVLTree(int (*comp)(const t &, const t &));
-    void deleteNode(const t &deleteItem);
+    // void deleteNode(const t &deleteItem);
 
 private:
     void balanceFromLeft(nodeType<t> *&currentNode);
@@ -29,8 +29,8 @@ void AVLTree<t>::insert(const t &insertItem)
     nodeType<t> *newNode = new nodeType<t>;
     newNode->data = new t(insertItem);
     newNode->bfactor = 0;
-    newNode->left = nullptr;
-    newNode->right = nullptr;
+    newNode->lLink = nullptr;
+    newNode->rLink = nullptr;
     insertIntoAVL(this->getRoot(), newNode, isTaller);
 }
 
@@ -130,7 +130,71 @@ void AVLTree<t>::balanceFromLeft(nodeType<t> *&currentNode)
         lChild_RChild->bfactor = 0;
         rotateToLeft(currentNode->lLink);
         rotateToRight(currentNode);
+        break;
     }
+}
+
+template <class t>
+void AVLTree<t>::balanceFromRight(nodeType<t> *&currentNode)
+{
+    nodeType<t> *rChild = currentNode->rLink;
+    switch (rChild->bfactor)
+    {
+    case -1:
+        switch (rChild->lLink->bfactor)
+        {
+        case -1:
+            currentNode->bfactor = 0;
+            rChild->bfactor = 1;
+            break;
+        case 0:
+            currentNode->bfactor = 0;
+            rChild->bfactor = 0;
+            break;
+        case 1:
+            currentNode->bfactor = -1;
+            rChild->bfactor = 0;
+        }
+        rChild->lLink->bfactor = 0;
+        rotateToRight(currentNode->rLink);
+        rotateToLeft(currentNode);
+        break;
+    case 0:
+        throw std::runtime_error("Right Subtree is balanced.");
+    case 1:
+        currentNode->bfactor = 0;
+        rChild->bfactor = 0;
+        rotateToLeft(currentNode);
+        break;
+    }
+}
+
+template <class t>
+void AVLTree<t>::rotateToLeft(nodeType<t> *&currentNode)
+{
+    nodeType<t> *newRootNode;
+    if (currentNode == nullptr || currentNode->rLink == nullptr)
+    {
+        throw std::out_of_range("Cannot rotate empty node.");
+    }
+    newRootNode = currentNode->rLink;
+    currentNode->rLink = newRootNode->lLink;
+    newRootNode->lLink = currentNode;
+    currentNode = newRootNode;
+}
+
+template <class t>
+void AVLTree<t>::rotateToRight(nodeType<t> *&currentNode)
+{
+    nodeType<t> *newRootNode;
+    if (currentNode == nullptr || currentNode->lLink == nullptr)
+    {
+        throw std::out_of_range("Cannot rotate empty node.");
+    }
+    newRootNode = currentNode->lLink;
+    currentNode->lLink = newRootNode->rLink;
+    newRootNode->rLink = currentNode;
+    currentNode = newRootNode;
 }
 
 #endif
