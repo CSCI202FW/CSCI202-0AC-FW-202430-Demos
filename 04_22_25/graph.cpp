@@ -1,6 +1,6 @@
 #include "graph.h"
 
-graphType::graphType(int size = 0)
+graphType::graphType(int size)
 {
     if (size >= 0)
     {
@@ -14,4 +14,154 @@ graphType::graphType(int size = 0)
     {
         graph.resize(maxSize);
     }
+}
+
+bool graphType::isEmpty() const
+{
+    return graph.empty();
+}
+
+void graphType::clearGraph()
+{
+    for (int i = 0; i < graph.size(); i++)
+    {
+        graph[i].destroyList();
+    }
+    graph.clear();
+    maxSize = 0;
+}
+void graphType::createGraph(std::string filename)
+{
+    std::ifstream fin(filename);
+    int index = 0;
+    int vertex = 0;
+    int adjcentVertex = 0;
+    if (!isEmpty())
+    {
+        clearGraph();
+    }
+    if (!fin.is_open())
+    {
+        throw std::runtime_error("Cannot open input file.");
+    }
+    int gSize = 0;
+    fin >> gSize;
+    if (gSize > maxSize)
+    {
+        maxSize = gSize;
+        graph.resize(maxSize);
+    }
+    for (index = 0; index < gSize; index++)
+    {
+        fin >> vertex;
+        fin >> adjcentVertex;
+        while (adjcentVertex != -999)
+        {
+            graph[vertex].insert(adjcentVertex);
+            fin >> adjcentVertex;
+        }
+    }
+    fin.close();
+}
+
+std::string graphType::printGraph()
+{
+    std::ostringstream out;
+    out << "digraph {" << std::endl;
+    for (int i = 0; i < graph.size(); i++)
+    {
+        for (linkedListIterator<int> graphIt = graph[i].begin(); graphIt != graph[i].end(); ++graphIt)
+        {
+            out << i << "->" << *graphIt << ";" << std::endl;
+        }
+    }
+    out << std::endl;
+    out << "}";
+    return out.str();
+}
+
+std::string graphType::breadthFirstTraversal()
+{
+    linkedQueue<int> queue;
+    bool *visited;
+    visited = new bool[graph.size()];
+    for (int i = 0; i < graph.size(); i++)
+    {
+        visited[i] = false;
+    }
+    std::string out = "";
+    for (int i = 0; i < graph.size(); i++)
+    {
+        if (!visited[i])
+        {
+            queue.enqueue(i);
+            visited[i] = true;
+            out = out + " " + std::to_string(i) + " ";
+            while (!queue.isEmptyQueue())
+            {
+                int u = queue.dequeue();
+                for (auto graphIt = graph[u].begin(); graphIt != graph[u].end(); ++graphIt)
+                {
+                    int w = *graphIt;
+                    if (!visited[w])
+                    {
+                        queue.enqueue(w);
+                        visited[w] = true;
+                        out = out + " " + std::to_string(w) + " ";
+                    }
+                }
+            }
+        }
+    }
+    delete[] visited;
+    return out;
+}
+
+std::string graphType::depthFirstTraversal()
+{
+    bool *visited;
+    visited = new bool[graph.size()];
+    std::string output = "";
+    for (int i = 0; i < graph.size(); i++)
+    {
+        visited[i] = false;
+    }
+    for (int i = 0; i < graph.size(); i++)
+    {
+        if (!visited[i])
+        {
+            dft(i, visited, output);
+        }
+    }
+    delete[] visited;
+    return output;
+}
+
+void graphType::dft(int v, bool visited[], std::string &output)
+{
+    visited[v] = true;
+    output = output + " " + std::to_string(v) + " ";
+    linkedListIterator<int> graphIt;
+    for (graphIt = graph[v].begin(); graphIt != graph[v].end(); ++graphIt)
+    {
+        int w = *graphIt;
+        if (!visited[v])
+        {
+            dft(w, visited, output);
+        }
+    }
+}
+
+std::string graphType::dftAtVertex(int vertex)
+{
+    bool *visited;
+    visited = new bool[graph.size()];
+    std::string output = "";
+    for (int i = 0; i < graph.size(); i++)
+    {
+        visited[i] = false;
+    }
+    dft(vertex, visited, output);
+    delete[] visited;
+    return output;
 }
