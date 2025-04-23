@@ -16,9 +16,9 @@ public:
     void clearGraph();
     std::string printGraph();
     graphType(int size = 0);
-    // graphType(const graphType &);
-    //~graphType();
-    // const graphType &operator=(const graphType &);
+    graphType(const graphType &);
+    ~graphType();
+    const graphType &operator=(const graphType &);
     std::string depthFirstTraversal();
     std::string dftAtVertex(int vertex);
     std::string breadthFirstTraversal();
@@ -32,7 +32,7 @@ protected:
 
 private:
     void dft(int v, bool visited[], std::string &output);
-    // void copyGraph(const graphType &);
+    void copyGraph(const graphType &);
 };
 
 #endif

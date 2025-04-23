@@ -67,16 +67,21 @@ void graphType::createGraph(std::string filename)
 std::string graphType::printGraph()
 {
     std::ostringstream out;
-    out << "digraph {" << std::endl;
+    // out << "digraph {" << std::endl; //comment this line out for python output keep for graphViz
     for (int i = 0; i < graph.size(); i++)
     {
-        for (linkedListIterator<int> graphIt = graph[i].begin(); graphIt != graph[i].end(); ++graphIt)
+        // three lines below for python ready output.
+        out << i << " ";
+        graph[i].print(out);
+        out << std::endl;
+        // comment out loop below for python keep for graphViz
+        /* for (linkedListIterator<int> graphIt = graph[i].begin(); graphIt != graph[i].end(); ++graphIt)
         {
             out << i << "->" << *graphIt << ";" << std::endl;
-        }
+        } */
     }
-    out << std::endl;
-    out << "}";
+    /* out << std::endl; //graphViz output
+    out << "}"; */
     return out.str();
 }
 
@@ -164,4 +169,43 @@ std::string graphType::dftAtVertex(int vertex)
     dft(vertex, visited, output);
     delete[] visited;
     return output;
+}
+
+graphType::graphType(const graphType &otherGraph)
+{
+    maxSize = 0;
+    // gSize = 0;
+    // graph = nullptr;
+    copyGraph(otherGraph);
+}
+
+graphType::~graphType()
+{
+    clearGraph();
+}
+
+const graphType &graphType::operator=(const graphType &otherGraph)
+{
+    if (this != &otherGraph)
+    {
+        copyGraph(otherGraph);
+    }
+    return *this;
+}
+
+void graphType::copyGraph(const graphType &otherGraph)
+{
+    if (!this->isEmpty())
+    {
+        this->clearGraph();
+    }
+
+    this->maxSize = otherGraph.maxSize;
+    // this->gSize = otherGraph.gSize;
+    // this->graph = new unorderedLinkedList<int>[this->maxSize];
+    graph.resize(otherGraph.graph.size());
+    for (int i = 0; i < this->graph.size(); i++)
+    {
+        this->graph[i] = otherGraph.graph[i];
+    }
 }

@@ -11,10 +11,15 @@ int main()
     graphType g;
     g.createGraph("graph.txt");
     std::cout << g.printGraph() << std::endl;
+    std::ofstream fout("g.txt");
+    fout << g.printGraph();
 
     std::cout << g.depthFirstTraversal() << std::endl
               << std::endl
               << std::endl;
     std::cout << g.breadthFirstTraversal() << std::endl;
+    graphType h(g);
+    std::cout << h.printGraph() << std::endl;
+
     return 0;
 }

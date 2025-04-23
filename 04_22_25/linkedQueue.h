@@ -44,7 +44,7 @@ void linkedQueue<t>::initializeQueue()
     while (!isEmptyQueue())
     {
         current = this->queueFront;
-        this->queueFront = this->queueFront->link;
+        this->queueFront = this->queueFront->next;
         delete current;
         current = nullptr;
     }
@@ -77,7 +77,7 @@ void linkedQueue<t>::enqueue(const t &queueElement)
     node<t> *newNode;
     newNode = new node<t>;
     newNode->data = new t(queueElement);
-    newNode->link = nullptr;
+    newNode->next = nullptr;
     if (this->isEmptyQueue())
     {
         this->queueFront = newNode;
@@ -85,7 +85,7 @@ void linkedQueue<t>::enqueue(const t &queueElement)
     }
     else
     {
-        this->queueRear->link = newNode;
+        this->queueRear->next = newNode;
         this->queueRear = newNode;
     }
 }
@@ -99,7 +99,7 @@ t linkedQueue<t>::dequeue()
     }
     node<t> *temp;
     temp = this->queueFront;
-    this->queueFront = this->queueFront->link;
+    this->queueFront = this->queueFront->next;
     t returnItem(*(temp->data));
     delete temp;
     return returnItem;
@@ -129,7 +129,7 @@ void linkedQueue<t>::copyQueue(const linkedQueue<t> &othQueue)
     while (current != nullptr)
     {
         this->enqueue(*(current->data));
-        current = current->link;
+        current = current->next;
     }
 }
 
