@@ -1,5 +1,28 @@
 #include "graph.h"
 
+//new connected function.
+bool connected(int index1, int index2){
+    //make sure indexes are in range.
+    if(index1 < 0 || index1 >= gSize || index2 < 0 || index2 >= gSize) {
+        throw std::out_of_range("Index out of bounds");
+    }
+    //call our iterator to traverse the graph from the perspective of index1
+    linkedListIterator<int> it;
+    for (it = adjList[index1].begin(); it != adjList[index1].end(); ++it) {
+        if (*it == index2) {
+            return true;
+        }
+    }
+    //double check from the perspective of index2
+    for (it = adjList[index2].begin(); it != adjList[index2].end(); ++it) {
+        if (*it == index1) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 graphType::graphType(int size)
 {
     if (size >= 0)
