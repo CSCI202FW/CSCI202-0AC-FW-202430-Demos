@@ -16,7 +16,8 @@ struct nodeType
         return *data;
     };
 };
-
+template<class t>
+using binaryNode = nodeType<t>;
 template <class t>
 class binaryTreeType
 {
