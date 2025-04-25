@@ -1,0 +1,21 @@
+replace = currentNode->lLink;
+        replaceParent = nullptr;
+        while (replace->rLink != nullptr)
+        {
+            replaceParent = replace;
+            replace = replace->rLink;
+        }
+        t *tempData;
+        tempData = currentNode->data;
+        currentNode->data = replace->data;
+        replace->data = tempData;
+        if (replaceParent == nullptr)
+        {
+            currentNode->lLink = replace->lLink;
+        }
+        else
+        {
+            replaceParent->rLink = replace->lLink;
+        }
+        delete replace;
+        replace = nullptr;
