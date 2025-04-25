@@ -15,15 +15,15 @@ public:
     class Iterator
     {
     public:
-        Iterator(binaryNode<t> *currentNode);
+        Iterator(nodeType<t> *currentNode);
         bool hasNext();
         t next();
         Iterator operator++();
         t &operator*();
 
     private:
-        linkedStack<binaryNode<t> *> nodeStack;
-        void pushLeftNodes(binaryNode<t> *node); // used to do inorder traversal.
+        linkedStack<nodeType<t> *> nodeStack;
+        void pushLeftNodes(nodeType<t> *node); // used to do inorder traversal.
     };
     Iterator begin() { return Iterator(this->getRoot()); };
     Iterator find(const t &searchItem);
@@ -38,7 +38,7 @@ private:
     void deleteNode(nodeType<t> *&currentNode, const t &deleteItem, bool &isShorter);
     void AVLTree<t>::deleteFromTree(nodeType<t> *&currentNode, bool &isShorter);
     void AVLTree<t>::replaceDelete(nodeType<t> *&currentNode, nodeType<t> *&deleteNode, nodeType<t> *&parent, bool &isShorter);
-    Iterator find(const t &searchItem, binaryNode<t> *currentItem);
+    Iterator find(const t &searchItem, nodeType<t> *currentItem);
 };
 
 template <class t>
@@ -351,6 +351,12 @@ void AVLTree<t>::deleteFromTree(nodeType<t> *&currentNode, bool &isShorter)
 }
 
 template <class t>
+AVLTree<t>::Iterator AVLTree<t>::find(const t &searchItem)
+{
+    return find(searchItem, this->getRoot());
+}
+
+template <class t>
 void AVLTree<t>::deleteNode(nodeType<t> *&currentNode, const t &deleteItem, bool &isShorter)
 {
 
@@ -501,4 +507,92 @@ void AVLTree<t>::replaceDelete(nodeType<t> *&currentNode, nodeType<t> *&deleteNo
         }
     }
 }
+template <class t>
+AVLTree<t>::Iterator AVLTree<t>::find(const t &searchItem, nodeType<t> *currentItem)
+{
+    if (currentItem == nullptr)
+    {
+        return AVLTree<t>::Iterator(nullptr);
+    }
+    int cmp = this->compare(searchItem, **currentItem);
+    if (cmp == 0)
+    {
+        return AVLTree<t>::Iterator(currentItem);
+    }
+    else if (cmp == 1)
+    {
+        return find(searchItem, currentItem->rLink);
+    }
+    else
+    {
+        return find(searchItem, currentItem->lLink);
+    }
+}
+
+template <class t>
+AVLTree<t>::Iterator::Iterator(nodeType<t> *currentNode)
+{
+    pushLeftNodes(currentNode);
+}
+template <class t>
+bool AVLTree<t>::Iterator::hasNext()
+{
+    return !nodeStack.isEmptyStack();
+}
+template <class t>
+void AVLTree<t>::Iterator::pushLeftNodes(nodeType<t> *node)
+{
+
+    while (node != nullptr)
+    {
+        nodeStack.push(node);
+        node = node->left;
+    }
+}
+
+template <class t>
+t AVLTree<t>::Iterator::next()
+{
+    if (nodeStack.isEmptyStack())
+    {
+        throw std::out_of_range("No more elements");
+    }
+    nodeType<t> *node = nodeStack.top();
+    nodeStack.pop();
+    t data = **node;
+    if (node->rLink != nullptr)
+    {
+        pushLeftNodes(node->rLink);
+    }
+    return data;
+}
+
+template <class t>
+AVLTree<t>::Iterator AVLTree<t>::Iterator::operator++()
+{
+    if (nodeStack.isEmptyStack())
+    {
+        throw std::out_of_range("No more elements");
+    }
+    nodeType<t> *node = nodeStack.top();
+    nodeStack.pop();
+
+    if (node->rLink != nullptr)
+    {
+        pushLeftNodes(node->rLink);
+    }
+    return *this;
+}
+
+template <class t>
+t &AVLTree<t>::Iterator::operator*()
+{
+    if (nodeStack.isEmptyStack())
+    {
+        throw std::out_of_range("No more elements");
+    }
+    nodeType<t> *node = nodeStack.top();
+    return **node;
+}
+
 #endif
