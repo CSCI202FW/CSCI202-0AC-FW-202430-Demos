@@ -38,6 +38,8 @@ public:
 
 protected:
     nodeType<t> *&getRoot();
+    nodeType<t> *getConstRoot() const;
+    int height(nodeType<t> *p) const;
 
 private:
     nodeType<t> *root;
@@ -46,7 +48,7 @@ private:
     void inorder(nodeType<t> *p, std::ostringstream &out) const;
     void preorder(nodeType<t> *p, std::ostringstream &out) const;
     void postorder(nodeType<t> *p, std::ostringstream &out) const;
-    int height(nodeType<t> *p) const;
+
     int nodeCount(nodeType<t> *p) const;
     int leavesCount(nodeType<t> *p) const;
     int max(int x, int y) const;
@@ -250,3 +252,9 @@ nodeType<t> *&binaryTreeType<t>::getRoot()
 }
 
 #endif
+
+template <class t>
+nodeType<t> *binaryTreeType<t>::getConstRoot() const
+{
+    return this->root;
+}

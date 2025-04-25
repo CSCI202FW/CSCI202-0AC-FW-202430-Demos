@@ -26,7 +26,7 @@ public:
         void pushLeftNodes(nodeType<t> *node); // used to do inorder traversal.
     };
     Iterator begin() { return Iterator(this->getRoot()); };
-    Iterator find(const t &searchItem);
+    Iterator find(const t &searchItem) const;
     Iterator end() { return Iterator(nullptr); };
 
 private:
@@ -36,9 +36,9 @@ private:
     void rotateToRight(nodeType<t> *&currentNode);
     void insertIntoAVL(nodeType<t> *&currentNode, nodeType<t> *newNode, bool &isTaller);
     void deleteNode(nodeType<t> *&currentNode, const t &deleteItem, bool &isShorter);
-    void AVLTree<t>::deleteFromTree(nodeType<t> *&currentNode, bool &isShorter);
-    void AVLTree<t>::replaceDelete(nodeType<t> *&currentNode, nodeType<t> *&deleteNode, nodeType<t> *&parent, bool &isShorter);
-    Iterator find(const t &searchItem, nodeType<t> *currentItem);
+    void deleteFromTree(nodeType<t> *&currentNode, bool &isShorter);
+    void replaceDelete(nodeType<t> *&currentNode, nodeType<t> *&deleteNode, nodeType<t> *&parent, bool &isShorter);
+    Iterator find(const t &searchItem, nodeType<t> *currentItem) const;
 };
 
 template <class t>
@@ -222,7 +222,7 @@ template <class t>
 void AVLTree<t>::deleteNode(const t &deleteItem)
 {
     bool isShorter = false;
-    delteNode(this->getRoot(), deleteItem, isShorter);
+    deleteNode(this->getRoot(), deleteItem, isShorter);
     /* nodeType<t> *current;
     nodeType<t> *currentParent;
     bool found = false;
@@ -245,11 +245,11 @@ void AVLTree<t>::deleteNode(const t &deleteItem)
             currentParent = current;
             if (cmp == 1)
             {
-                current = current->rLink;
+                current = currentNode->rLink;
             }
             else
             {
-                current = current->lLink;
+                current = currentNode->lLink;
             }
         }
     }
@@ -307,7 +307,7 @@ void AVLTree<t>::deleteFromTree(nodeType<t> *&currentNode, bool &isShorter)
     }
     else
     {
-        replaceDelete(currentNode->lLink, currentNode, nullptr, isShorter);
+        replaceDelete(currentNode->lLink, currentNode, currentNode, isShorter);
         if (isShorter)
         {
 
@@ -322,26 +322,26 @@ void AVLTree<t>::deleteFromTree(nodeType<t> *&currentNode, bool &isShorter)
                 isShorter = false;
                 break;
             case 1:
-                switch (currentNode->rLink)
+                switch (currentNode->rLink->bfactor)
                 {
                 case -1:
                     rotateToLeft(currentNode);
-                    currentNode->bfactor = height(currentNode->rLink) - height(currentNode->lLink);
-                    currentNode->rLink->bfactor = height(current->rLink->rLink) - height(current->rLink->lLink);
+                    currentNode->bfactor = this->height(currentNode->rLink) - this->height(currentNode->lLink);
+                    currentNode->rLink->bfactor = this->height(currentNode->rLink->rLink) - this->height(currentNode->rLink->lLink);
                     isShorter = true;
                     break;
                 case 0:
                     rotateToLeft(currentNode);
-                    currentNode->bfactor = height(currentNode->rLink) - height(currentNode->lLink);
-                    currentNode->rLink->bfactor = height(current->rLink->rLink) - height(current->rLink->lLink);
+                    currentNode->bfactor = this->height(currentNode->rLink) - this->height(currentNode->lLink);
+                    currentNode->rLink->bfactor = this->height(currentNode->rLink->rLink) - this->height(currentNode->rLink->lLink);
                     isShorter = false;
                     break;
                 case 1:
                     rotateToRight(currentNode->rLink);
                     rotateToLeft(currentNode);
 
-                    currentNode->bfactor = height(currentNode->rLink) - height(currentNode->lLink);
-                    currentNode->rLink->bfactor = height(current->rLink->rLink) - height(current->rLink->lLink);
+                    currentNode->bfactor = this->height(currentNode->rLink) - this->height(currentNode->lLink);
+                    currentNode->rLink->bfactor = this->height(currentNode->rLink->rLink) - this->height(currentNode->rLink->lLink);
                     isShorter = true;
                     break;
                 }
@@ -351,9 +351,9 @@ void AVLTree<t>::deleteFromTree(nodeType<t> *&currentNode, bool &isShorter)
 }
 
 template <class t>
-AVLTree<t>::Iterator AVLTree<t>::find(const t &searchItem)
+typename AVLTree<t>::Iterator AVLTree<t>::find(const t &searchItem) const
 {
-    return find(searchItem, this->getRoot());
+    return find(searchItem, this->getConstRoot());
 }
 
 template <class t>
@@ -364,7 +364,8 @@ void AVLTree<t>::deleteNode(nodeType<t> *&currentNode, const t &deleteItem, bool
     {
         throw std::invalid_argument("The item to be deleted is not in the tree");
     }
-    int cmp = this->compare(deleteItem, **currentNode) if (cmp == 0)
+    int cmp = this->compare(deleteItem, **currentNode);
+    if (cmp == 0)
     {
         deleteFromTree(currentNode, isShorter);
         // isShorter = true;
@@ -388,8 +389,8 @@ void AVLTree<t>::deleteNode(nodeType<t> *&currentNode, const t &deleteItem, bool
                 rotateToRight(currentNode->rLink);
                 rotateToLeft(currentNode);
 
-                currentNode->bfactor = height(currentNode->rLink) - height(currentNode->lLink);
-                currentNode->rLink->bfactor = height(current->rLink->rLink) - height(current->rLink->lLink);
+                currentNode->bfactor = this->height(currentNode->rLink) - this->height(currentNode->lLink);
+                currentNode->rLink->bfactor = this->height(currentNode->rLink->rLink) - this->height(currentNode->rLink->lLink);
                 isShorter = true;
                 break;
             }
@@ -408,21 +409,21 @@ void AVLTree<t>::deleteNode(nodeType<t> *&currentNode, const t &deleteItem, bool
                 {
                 case -1:
                     rotateToRight(currentNode);
-                    currentNode->bfactor = height(currentNode->rLink) - height(currentNode->lLink);
-                    currentNode->lLink->bfactor = height(current->lLink->rLink) - height(current->lLink->lLink);
+                    currentNode->bfactor = this->height(currentNode->rLink) - this->height(currentNode->lLink);
+                    currentNode->lLink->bfactor = this->height(currentNode->lLink->rLink) - this->height(currentNode->lLink->lLink);
                     isShorter = true;
                     break;
                 case 0:
                     rotateToRight(currentNode);
-                    currentNode->bfactor = height(currentNode->rLink) - height(currentNode->lLink);
-                    currentNode->lLink->bfactor = height(current->lLink->rLink) - height(current->lLink->lLink);
+                    currentNode->bfactor = this->height(currentNode->rLink) - this->height(currentNode->lLink);
+                    currentNode->lLink->bfactor = this->height(currentNode->lLink->rLink) - this->height(currentNode->lLink->lLink);
                     isShorter = false;
                     break;
                 case 1:
                     rotateToLeft(currentNode->lLink);
                     rotateToRight(currentNode);
-                    currentNode->bfactor = height(currentNode->rLink) - height(currentNode->lLink);
-                    currentNode->lLink->bfactor = height(current->lLink->rLink) - height(current->lLink->lLink);
+                    currentNode->bfactor = this->height(currentNode->rLink) - this->height(currentNode->lLink);
+                    currentNode->lLink->bfactor = this->height(currentNode->lLink->rLink) - this->height(currentNode->lLink->lLink);
                     isShorter = true;
                     break;
                 }
@@ -474,21 +475,21 @@ void AVLTree<t>::replaceDelete(nodeType<t> *&currentNode, nodeType<t> *&deleteNo
                 {
                 case -1:
                     rotateToRight(currentNode);
-                    currentNode->bfactor = height(currentNode->rLink) - height(currentNode->lLink);
-                    currentNode->lLink->bfactor = height(current->lLink->rLink) - height(current->lLink->lLink);
+                    currentNode->bfactor = this->height(currentNode->rLink) - this->height(currentNode->lLink);
+                    currentNode->lLink->bfactor = this->height(currentNode->lLink->rLink) - this->height(currentNode->lLink->lLink);
                     isShorter = true;
                     break;
                 case 0:
                     rotateToRight(currentNode);
-                    currentNode->bfactor = height(currentNode->rLink) - height(currentNode->lLink);
-                    currentNode->lLink->bfactor = height(current->lLink->rLink) - height(current->lLink->lLink);
+                    currentNode->bfactor = this->height(currentNode->rLink) - this->height(currentNode->lLink);
+                    currentNode->lLink->bfactor = this->height(currentNode->lLink->rLink) - this->height(currentNode->lLink->lLink);
                     isShorter = false;
                     break;
                 case 1:
                     rotateToLeft(currentNode->lLink);
                     rotateToRight(currentNode);
-                    currentNode->bfactor = height(currentNode->rLink) - height(currentNode->lLink);
-                    currentNode->lLink->bfactor = height(current->lLink->rLink) - height(current->lLink->lLink);
+                    currentNode->bfactor = this->height(currentNode->rLink) - this->height(currentNode->lLink);
+                    currentNode->lLink->bfactor = this->height(currentNode->lLink->rLink) - this->height(currentNode->lLink->lLink);
                     isShorter = true;
                     break;
                 }
@@ -508,7 +509,7 @@ void AVLTree<t>::replaceDelete(nodeType<t> *&currentNode, nodeType<t> *&deleteNo
     }
 }
 template <class t>
-AVLTree<t>::Iterator AVLTree<t>::find(const t &searchItem, nodeType<t> *currentItem)
+typename AVLTree<t>::Iterator AVLTree<t>::find(const t &searchItem, nodeType<t> *currentItem) const
 {
     if (currentItem == nullptr)
     {
@@ -546,7 +547,7 @@ void AVLTree<t>::Iterator::pushLeftNodes(nodeType<t> *node)
     while (node != nullptr)
     {
         nodeStack.push(node);
-        node = node->left;
+        node = node->lLink;
     }
 }
 
@@ -568,7 +569,7 @@ t AVLTree<t>::Iterator::next()
 }
 
 template <class t>
-AVLTree<t>::Iterator AVLTree<t>::Iterator::operator++()
+typename AVLTree<t>::Iterator AVLTree<t>::Iterator::operator++()
 {
     if (nodeStack.isEmptyStack())
     {
