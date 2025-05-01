@@ -1,0 +1,22 @@
+uniform distribution 10007 size hash table modulus
+
+There were 1075 collisions.
+There were 3925 items inserted.
+
+-------------------------------------------------------------------------
+uniform distribution 10007 size hash table mid-square
+
+There were 1062 collisions.
+There were 3938 items inserted.
+
+-------------------------------------------------------------------------
+clustered values 10007 hash table modulus
+
+There were 3540 collisions.
+There were 1461 items inserted.
+
+-------------------------------------------------------------------------
+clustered values 10007 hash table mid-square
+
+There were 1140 collisions.
+There were 3861 items inserted.
