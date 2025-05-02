@@ -35,9 +35,16 @@ bool Person::operator>=(const Person &other) const
 int Person::hash()
 {
     int sum = 0;
-    for (int i = 0; i < name.length(); i++)
+    int len = name.length();
+    for (int i = 0; i < 15 - len; i++)
     {
-        sum = sum + static_cast<int>(name[i]);
+        name = name + " ";
+    }
+    int index = 0;
+    for (int i = 0; i < 5; i++)
+    {
+        sum = sum + static_cast<int>(name[index]) * 33 * 33 + static_cast<int>(name[index + 1]) * 33 + static_cast<int>(name[index + 2]);
+        index = index + 3;
     }
     sum = sum + age;
     return sum;

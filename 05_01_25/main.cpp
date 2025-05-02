@@ -11,6 +11,10 @@
 
 const int HT_SIZE = 10007;
 
+// lecture activity implement universal hashing (number 6) from https://www.geeksforgeeks.org/hash-functions-and-list-types-of-hash-functions/
+// rerun both experiments
+// submit the clustered and uniform distribution results
+
 void setup();
 int hash(int);
 int hashing_midsquare(long key, int size);
@@ -51,6 +55,8 @@ int main()
     int semajHash = semaj.hash();
     jamesHash = jamesHash % 13;
     semajHash = semajHash % 13;
+    people[jamesHash] = &james;
+    people[semajHash] = &semaj;
 
     return 0;
 }
@@ -66,7 +72,8 @@ void setup()
     while (randomData.size() < 5000)
     {
         int num = 0;
-        num = distribution2(generator) * 100000 + distribution(generator);
+        // num = distribution2(generator) * 100000 + distribution(generator);
+        num = distribution3(generator);
         randomData.insert(num);
     }
     for (int i : randomData)
@@ -78,6 +85,14 @@ void setup()
 
 int hash(int key)
 {
+    std::default_random_engine generator;
+    std::uniform_real_distribution<double> distribution(0, 1);
+    static double A = distribution(generator);
+    double hash;
+    double fraction = std::modf(key * A, &hash);
+    hash = HT_SIZE * fraction;
+    hash = floor(hash);
+    return static_cast<int>(hash);
     // return key % HT_SIZE;
     return hashing_midsquare(key, 4);
 }
