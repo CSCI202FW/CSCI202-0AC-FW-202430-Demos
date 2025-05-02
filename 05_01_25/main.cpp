@@ -37,6 +37,10 @@ int main()
     {
         int num;
         in >> num;
+        if (!in)
+        {
+            break;
+        }
         int hashValue = hash(num);
         if (ht[hashValue] == -1)
         {
@@ -51,7 +55,7 @@ int main()
             bool found = false;
             int pCount = 0;
             int i = 1;
-            while (ht[hashValue] != -1 && !found)
+            while (ht[hashValue] != -1 && !found && pCount < HT_SIZE / 2)
             {
                 if (ht[hashValue] == num)
                 {
@@ -59,9 +63,10 @@ int main()
                 }
                 else
                 {
-                    hashValue = hashValue + i % HT_SIZE;
+                    hashValue = (hashValue + i * i) % HT_SIZE;
                     probeCount++;
                     pCount++;
+                    i++;
                 }
             }
             if (found)
@@ -70,6 +75,11 @@ int main()
                 probeCount -= pCount;
                 std::cout << "Duplicates are not allowed" << std::endl;
             }
+            if (pCount >= HT_SIZE / 2)
+            {
+                std::cout << "The table is full." << std::endl;
+                break;
+            }
             else
             {
                 ht[hashValue] = num;
@@ -77,9 +87,10 @@ int main()
             }
         }
     }
-
+    in.close();
     std::cout << "There were " << collisions << " collisions." << std::endl;
     std::cout << "There were " << count << " items inserted." << std::endl;
+    std::cout << "There were " << static_cast<double>(probeCount) / collisions << " average probes per collision." << std::endl;
 
     Person **people = new Person *[13];
     Person james("james", 28);

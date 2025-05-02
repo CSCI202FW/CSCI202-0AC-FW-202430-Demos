@@ -57,4 +57,9 @@ uniform distribution 10007 size hash table modulus with linear probing
 There were 1233 collisions.
 There were 5000 items inserted.
 
+------------------------------------------------------------------------
+uniform distribution 10007 size hash table multiplication with quadratic probing
 
+There were 1263 collisions.
+There were 5000 items inserted.
+There were 1.65162 average probes per collision.
