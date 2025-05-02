@@ -136,8 +136,8 @@ int hash(int key)
     double fraction = std::modf(key * A, &hash);
     hash = HT_SIZE * fraction;
     hash = floor(hash);
-    return static_cast<int>(hash);
-    //  return key % HT_SIZE;
+    // return static_cast<int>(hash);
+    return key % HT_SIZE;
     // return hashing_midsquare(key, 4);
 }
 

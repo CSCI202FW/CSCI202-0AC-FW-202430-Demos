@@ -63,3 +63,52 @@ uniform distribution 10007 size hash table multiplication with quadratic probing
 There were 1263 collisions.
 There were 5000 items inserted.
 There were 1.65162 average probes per collision.
+
+------------------------------------------------------------------------
+uniform distribution 10007 size hash table multiplication with linear probing
+There were 1261 collisions.
+There were 5000 items inserted.
+There were 1.95242 average probes per collision.
+
+------------------------------------------------------------------------
+uniform distribution 10007 size hash table mid-square with linear probing
+
+There were 1233 collisions.
+There were 5000 items inserted.
+There were 2.01541 average probes per collision.
+
+------------------------------------------------------------------------
+uniform distribution 10007 size hash table modulus with linear probing
+
+There were 1273 collisions.
+There were 5000 items inserted.
+There were 1.98979 average probes per collision.
+
+------------------------------------------------------------------------
+clustered distribution 10007 size hash table multiplication with linear probing
+
+There were 927 collisions.
+There were 5000 items inserted.
+There were 1.40885 average probes per collision.
+
+------------------------------------------------------------------------
+clustered distribution 10007 size hash table modulus with linear probing
+
+There were 4194 collisions.
+There were 5000 items inserted.
+There were 2088.31 average probes per collision.
+
+------------------------------------------------------------------------
+uniform distribution 10007 size hash table mid-square with quadratic probing
+
+There were 1249 collisions.
+There were 5000 items inserted.
+There were 1.73739 average probes per collision.
+
+------------------------------------------------------------------------
+uniform distribution 10007 size hash table modulus with quadratic probing
+
+There were 1264 collisions.
+There were 5000 items inserted.
+There were 1.73972 average probes per collision.
+
