@@ -32,3 +32,29 @@ uniform distribution 10007 hash table multiplication
 
 There were 1064 collisions.
 There were 3936 items inserted.
+
+------------------------------------------------------------------------
+uniform distribution 10007 hash table multiplication with linear probing
+
+There were 1261 collisions.
+There were 5000 items inserted.
+
+-------------------------------------------------------------------------
+clustered values 10007 hash table multiplication with linear probing
+
+There were 927 collisions.
+There were 5000 items inserted.
+
+-------------------------------------------------------------------------
+clustered values 10007 hash table mid-square with linear probing
+
+There were 1378 collisions.
+There were 5000 items inserted.
+
+------------------------------------------------------------------------
+uniform distribution 10007 size hash table modulus with linear probing
+
+There were 1233 collisions.
+There were 5000 items inserted.
+
+

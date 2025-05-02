@@ -21,18 +21,24 @@ int hashing_midsquare(long key, int size);
 
 int main()
 {
-    // setup();
+    setup();
     std::ifstream in("exp.txt");
-    int ht[HT_SIZE] = {0};
+    int ht[HT_SIZE];
     int collisions = 0;
     int count = 0;
+    unsigned long probeCount = 0;
+
+    for (int i = 0; i < HT_SIZE; i++)
+    {
+        ht[i] = -1;
+    }
 
     while (!in.eof())
     {
         int num;
         in >> num;
         int hashValue = hash(num);
-        if (ht[hashValue] == 0)
+        if (ht[hashValue] == -1)
         {
             ht[hashValue] = num;
             std::cout << num << " inserted at " << hashValue << std::endl;
@@ -42,6 +48,33 @@ int main()
         {
             std::cout << num << " collided with " << ht[hashValue] << std::endl;
             collisions++;
+            bool found = false;
+            int pCount = 0;
+            int i = 1;
+            while (ht[hashValue] != -1 && !found)
+            {
+                if (ht[hashValue] == num)
+                {
+                    found = true;
+                }
+                else
+                {
+                    hashValue = hashValue + i % HT_SIZE;
+                    probeCount++;
+                    pCount++;
+                }
+            }
+            if (found)
+            {
+                collisions--;
+                probeCount -= pCount;
+                std::cout << "Duplicates are not allowed" << std::endl;
+            }
+            else
+            {
+                ht[hashValue] = num;
+                count++;
+            }
         }
     }
 
@@ -93,8 +126,8 @@ int hash(int key)
     hash = HT_SIZE * fraction;
     hash = floor(hash);
     return static_cast<int>(hash);
-    // return key % HT_SIZE;
-    return hashing_midsquare(key, 4);
+    //  return key % HT_SIZE;
+    // return hashing_midsquare(key, 4);
 }
 
 int hashing_midsquare(long key, int size)
