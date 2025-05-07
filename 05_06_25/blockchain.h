@@ -4,10 +4,10 @@
 #include "block.h"
 #include "linkedQueue.h"
 
-class blockchain
+class blockChain
 {
 public:
-    blockchain();
+    blockChain();
     void insert(std::string);
     void verify();
 
